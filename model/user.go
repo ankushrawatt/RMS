@@ -30,9 +30,10 @@ type AdminInfo struct {
 }
 
 type Restaurant struct {
-	Name string `db:"name" json:"name"`
-	Lat  string `db:"LAT" json:"lat"`
-	Lng  string `db:"LNG" json:"lng"`
+	Name         string  `db:"name" json:"name"`
+	Lat          float64 `db:"LAT" json:"lat"`
+	Lng          float64 `db:"LNG" json:"lng"`
+	RestaurantID int     `db:"restaurantID" json:"restaurantID"`
 }
 
 type LoginInfo struct {

@@ -1,0 +1,2 @@
+ALTER TABLE restaurant
+ADD COLUMN restaurantID INT PRIMARY KEY;

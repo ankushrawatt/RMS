@@ -86,10 +86,10 @@ func Restaurant() (*model.Restaurant, error) {
 	return &data, nil
 }
 
-func AddRestaurant(name string, lat, lng float64) error {
-	SQL := `INSERT INTO restaurant(name,lat,lng)VALUES($1,$2,$3) RETURNING name`
+func AddRestaurant(name string, lat, lng float64, restaurantID int) error {
+	SQL := `INSERT INTO restaurant(name,lat,lng,restaurantid)VALUES($1,$2,$3,$4) RETURNING name`
 	var restaurantName string
-	err := database.RMS.Get(&restaurantName, SQL, name, lat, lng)
+	err := database.RMS.Get(&restaurantName, SQL, name, lat, lng, restaurantID)
 	if err != nil {
 		return err
 	}

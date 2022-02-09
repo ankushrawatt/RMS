@@ -86,8 +86,8 @@ func AddRestaurant(writer http.ResponseWriter, request *http.Request) {
 	var restaurant model.Restaurant
 	err := json.NewDecoder(request.Body).Decode(&restaurant)
 	utils.CheckError(err)
-	helper.AddRestaurant(restaurant.Name, restaurant.Lat, restaurant.Lng)
-
+	NewErr := helper.AddRestaurant(restaurant.Name, restaurant.Lat, restaurant.Lng, restaurant.RestaurantID)
+	utils.CheckError(NewErr)
 }
 
 func AllRestaurant(writer http.ResponseWriter, request *http.Request) {

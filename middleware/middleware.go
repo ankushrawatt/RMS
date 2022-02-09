@@ -61,6 +61,7 @@ func AdminMiddleware(next http.Handler) http.Handler {
 			utils.CheckError(tokenErr)
 		}
 		if token.Valid {
+
 			ctx := context.WithValue(request.Context(), userContext, "")
 			next.ServeHTTP(writer, request.WithContext(ctx))
 		} else {
