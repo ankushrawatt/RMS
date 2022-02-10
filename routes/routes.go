@@ -21,11 +21,15 @@ func Route() *Server {
 		r.Route("/user", func(user chi.Router) {
 			user.Use(middleware.UserMiddleware)
 			user.Get("/", handler.AllRestaurant)
+			user.Post("/", handler.AllDish)
+
 		})
 		r.Route("/admin", func(admin chi.Router) {
 			admin.Use(middleware.AdminMiddleware)
 			admin.Post("/addrestaurant", handler.AddRestaurant)
 			admin.Post("/addsubadmin", handler.AddSubAdmin)
+			admin.Post("/adddish", handler.AddDish)
+
 		})
 	})
 	return &Server{router}

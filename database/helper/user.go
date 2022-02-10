@@ -23,11 +23,11 @@ func CheckPassword(password, hashpass string) error {
 
 }
 
-func CreateUser(ID, Email, Firstname, Lastname, UserID, Password, Mobile, role string) (string, error) {
-	SQL := `INSERT INTO users(ID, Email, FirstName, LastName, UserID, Password, MobileNo,role) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)RETURNING UserID`
+func CreateUser(ID, Email, Firstname, Lastname, UserID, Password, Mobile, role, createdby string) (string, error) {
+	SQL := `INSERT INTO users(ID, Email, FirstName, LastName, UserID, Password, MobileNo,role,createdby) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)RETURNING UserID`
 	var user string
 	HashPass := HashPassword(Password)
-	err := database.RMS.Get(&user, SQL, ID, Email, Firstname, Lastname, UserID, HashPass, Mobile, role)
+	err := database.RMS.Get(&user, SQL, ID, Email, Firstname, Lastname, UserID, HashPass, Mobile, role, createdby)
 	utils.CheckError(err)
 	return user, nil
 }
@@ -70,26 +70,6 @@ func CreateSession(token, userid string) error {
 	SQL := `INSERT INTO session(id,userid)VALUES($1,$2) returning userid`
 	var user string
 	err := database.RMS.Get(&user, SQL, token, userid)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func Restaurant() (*model.Restaurant, error) {
-	SQL := `SELECT name,lat,lng from restaurant`
-	var data model.Restaurant
-	err := database.RMS.Select(&data, SQL)
-	if err != nil {
-		return nil, err
-	}
-	return &data, nil
-}
-
-func AddRestaurant(name string, lat, lng float64, restaurantID int) error {
-	SQL := `INSERT INTO restaurant(name,lat,lng,restaurantid)VALUES($1,$2,$3,$4) RETURNING name`
-	var restaurantName string
-	err := database.RMS.Get(&restaurantName, SQL, name, lat, lng, restaurantID)
 	if err != nil {
 		return err
 	}

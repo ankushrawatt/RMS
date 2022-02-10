@@ -1,5 +1,0 @@
-CREATE TABLE IF NOT EXISTS session(
-    id TEXT NOT NULL ,
-    userid Text NOT NULL,
-    createdAt TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
