@@ -68,7 +68,7 @@ func Subadmin(admin, role string) ([]model.SubAdmin, error) {
 	return subadmin, nil
 }
 
-func AdminUsers(adminID string) ([]model.UserInfo, error) {
+func UsersByAdmin(adminID string) ([]model.UserInfo, error) {
 	// language=SQL
 	SQL := `SELECT id,firstname,lastname,email,mobileno,role,userid FROM users WHERE createdby=$1`
 	users := make([]model.UserInfo, 0)
@@ -88,4 +88,16 @@ func AddAddress(id string, lat, lng float64) error {
 		return err
 	}
 	return nil
+}
+
+func GetUserAddress(id string) (*model.Address, error) {
+	//language=sql
+	SQL := `SELECT lat,lng from address where id=$1`
+	var address model.Address
+	err := database.RMS.Get(&address, SQL, id)
+	if err != nil {
+		return nil, err
+	}
+	return &address, nil
+
 }

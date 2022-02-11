@@ -33,10 +33,10 @@ func Route() *Server {
 			rms.Route("/admin", func(admin chi.Router) {
 				admin.Use(middleware.AdminMiddleware)
 				admin.Get("/subadmin", handler.Subadmin)
-				admin.Get("/allusers", handler.AdminUsers)
+				admin.Get("/allusers", handler.UsersByAdmin)
 				admin.Get("/restaurant", handler.AllRestaurant)
 
-				rms.Route("/add", func(add chi.Router) {
+				admin.Route("/add", func(add chi.Router) {
 					add.Post("/dish", handler.AddDish)
 					add.Post("/subadmin", handler.AddSubAdmin)
 					add.Post("/restaurant", handler.AddRestaurant)

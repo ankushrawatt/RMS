@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/google/uuid"
 	"net/http"
 	"rmsProject/database/helper"
@@ -27,14 +28,28 @@ func AddRestaurant(writer http.ResponseWriter, request *http.Request) {
 	utils.CheckError(NewErr)
 }
 
-//For user
 func AllRestaurant(writer http.ResponseWriter, request *http.Request) {
 	claims := request.Context().Value("user").(model.JWTClaims)
 	if claims.Role == "user" {
 		data, err := helper.Restaurant()
 		utils.CheckError(err)
+		fmt.Println(data[0].Lat)
+
+		id := GetID(claims.UserID)
+		address, newErr := helper.GetUserAddress(id)
+		utils.CheckError(newErr)
+		distance := make([]float64, 2)
+		for i := 0; i < 2; i++ {
+			distance[i] = utils.Distance(data[i].Lat, data[i].Lng, address.Lat, address.Lng)
+
+		}
+		for i := 0; i < 2; i++ {
+			writer.Write([]byte(fmt.Sprintf("Distance for %v is %vKM ", data[i].Name, distance[i])))
+		}
+
 		err = json.NewEncoder(writer).Encode(data)
 		utils.CheckError(err)
+
 		return
 	} else {
 		id := GetID(claims.UserID)
@@ -44,9 +59,6 @@ func AllRestaurant(writer http.ResponseWriter, request *http.Request) {
 		utils.CheckError(err)
 		return
 	}
-
-	//fmt.Println(claims.Role)
-
 }
 
 func AddDish(writer http.ResponseWriter, request *http.Request) {
@@ -97,10 +109,10 @@ func Subadmin(writer http.ResponseWriter, request *http.Request) {
 	utils.CheckError(err)
 }
 
-func AdminUsers(writer http.ResponseWriter, request *http.Request) {
+func UsersByAdmin(writer http.ResponseWriter, request *http.Request) {
 	claims := request.Context().Value("user").(model.JWTClaims)
 	ID := GetID(claims.UserID)
-	users, err := helper.AdminUsers(ID)
+	users, err := helper.UsersByAdmin(ID)
 	utils.CheckError(err)
 	err = json.NewEncoder(writer).Encode(users)
 	utils.CheckError(err)

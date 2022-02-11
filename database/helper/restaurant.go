@@ -12,6 +12,11 @@ func Restaurant() ([]model.Restaurant, error) {
 	if err != nil {
 		return nil, err
 	}
+	//distance := make([]float64, 0)
+	//fmt.Println(data[1].Lat)
+	//for i := range data {
+	//	distance[i] = utils.Distance(data[i].Lat, data[i].Lat, 28.7041, 77.1025)
+	//}
 	return data, nil
 }
 
@@ -22,6 +27,11 @@ func AdminRestaurant(id string) ([]model.Restaurant, error) {
 	if err != nil {
 		return nil, err
 	}
+	//for i := range data {
+	//	data[i].Distance = utils.Distance(data[i].Lat, data[i].Lat, 28, 76)
+	//	fmt.Println(data[1].Distance)
+	//
+	//}
 	return data, nil
 }
 
