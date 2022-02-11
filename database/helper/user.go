@@ -32,25 +32,6 @@ func CreateUser(ID, Email, Firstname, Lastname, UserID, Password, Mobile, role, 
 	return user, nil
 }
 
-//
-//func CreateAdmin(ID, email, firstname, lastname, password, mobile, userid, role string) (string, error) {
-//	SQL := `INSERT INTO users(ID,Email,FirstName,LastName,UserID,Password,MobileNo,role)VALUES($1,$2,$3,$4,$5,$6,$7,$8)returning UserID`
-//	var admin string
-//	HashPass := HashPassword(password)
-//	err := database.RMS.Get(&admin, SQL, ID, email, firstname, lastname, userid, HashPass, mobile, role)
-//	utils.CheckError(err)
-//	return admin, nil
-//}
-
-//func CreateSubAdmin(ID, email, firstname, lastname, password, mobile, userid, role string) (string, error) {
-//	SQL := `INSERT INTO users(ID,Email,FirstName,LastName,UserID,Password,MobileNo,role)VALUES($1,$2,$3,$4,$5,$6,$7,$8)returning UserID`
-//	var admin string
-//	HashPass := HashPassword(password)
-//	err := database.RMS.Get(&admin, SQL, ID, email, firstname, lastname, userid, HashPass, mobile, role)
-//	utils.CheckError(err)
-//	return admin, nil
-//}
-
 func LoginUser(email, password string) (*model.Info, error) {
 	SQL := `SELECT userid,password,role FROM users WHERE email=$1`
 	var hashPass string
@@ -96,5 +77,15 @@ func AdminUsers(adminID string) ([]model.UserInfo, error) {
 		return nil, err
 	}
 	return users, nil
+}
 
+func AddAddress(id string, lat, lng float64) error {
+	//language=SQL
+	SQL := `INSERT INTO address(id, lat, lng) VALUES ($1,$2,$3) returning id`
+	var userid string
+	err := database.RMS.Get(&userid, SQL, id, lat, lng)
+	if err != nil {
+		return err
+	}
+	return nil
 }

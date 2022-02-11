@@ -46,7 +46,7 @@ func AddDish(name string, ID, price int) error {
 }
 
 func Dishes(ID int) ([]model.Dishes, error) {
-	SQL := `SELECT id,dishname,price FROM dishes where restaurantid=$1`
+	SQL := `SELECT dishname,price FROM dishes where restaurantid=$1`
 	dishes := make([]model.Dishes, 0)
 	err := database.RMS.Select(&dishes, SQL, ID)
 	if err != nil {

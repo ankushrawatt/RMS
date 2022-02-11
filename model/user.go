@@ -14,7 +14,7 @@ type UserInfo struct {
 }
 
 type JWTClaims struct {
-	UserID string `db:"createdby"json:"user"`
+	UserID string `db:"userid"json:"user"`
 	Role   string `db:"role" json:"role"`
 	jwt.StandardClaims
 }
@@ -47,7 +47,7 @@ type Info struct {
 }
 
 type Dishes struct {
-	ID       int    `db:"restaurantid" json:"restaurantID"`
+	ID       int    `db:"restaurantid" json:"ID"`
 	DishName string `db:"dishname" json:"dishName"`
 	Price    int    `db:"price" json:"price"`
 }
@@ -58,4 +58,9 @@ type SubAdmin struct {
 	UserID   string `db:"userID" json:"userID"`
 	MobileNo string `db:"mobileno" json:"mobileNo"`
 	Email    string `db:"email" json:"email"`
+}
+
+type Address struct {
+	Lat float64 `db:"lat" json:"lat"`
+	Lng float64 `db:"lng" json:"lng"`
 }

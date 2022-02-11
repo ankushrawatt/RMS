@@ -29,14 +29,24 @@ func AddRestaurant(writer http.ResponseWriter, request *http.Request) {
 
 //For user
 func AllRestaurant(writer http.ResponseWriter, request *http.Request) {
-	//claims := request.Context().Value("user").(model.JWTClaims)
-	//id:=GetID(claims.UserID)
-	data, err := helper.Restaurant()
+	claims := request.Context().Value("user").(model.JWTClaims)
+	if claims.Role == "user" {
+		data, err := helper.Restaurant()
+		utils.CheckError(err)
+		err = json.NewEncoder(writer).Encode(data)
+		utils.CheckError(err)
+		return
+	} else {
+		id := GetID(claims.UserID)
+		data, err := helper.AdminRestaurant(id)
+		utils.CheckError(err)
+		err = json.NewEncoder(writer).Encode(data)
+		utils.CheckError(err)
+		return
+	}
 
 	//fmt.Println(claims.Role)
-	utils.CheckError(err)
-	err = json.NewEncoder(writer).Encode(data)
-	utils.CheckError(err)
+
 }
 
 func AddDish(writer http.ResponseWriter, request *http.Request) {
@@ -51,14 +61,14 @@ func AddDish(writer http.ResponseWriter, request *http.Request) {
 
 //For user
 func AllDish(writer http.ResponseWriter, request *http.Request) {
-	//claims := request.Context().Value("user").(model.JWTClaims)
-	//id := GetID(claims.UserID)
-	id := struct {
-		id int `json:"ID"`
-	}{}
-	json.NewDecoder(request.Body).Decode(&id)
-	dishes, err := helper.Dishes(id.id)
+	// claims := request.Context().Value("user").(model.JWTClaims)
+	// id := GetID(claims.UserID)
+
+	var id model.Dishes
+	err := json.NewDecoder(request.Body).Decode(&id)
 	utils.CheckError(err)
+	dishes, newErr := helper.Dishes(id.ID)
+	utils.CheckError(newErr)
 	err = json.NewEncoder(writer).Encode(dishes)
 	utils.CheckError(err)
 }
@@ -106,14 +116,5 @@ func AddUser(writer http.ResponseWriter, request *http.Request) {
 	userID, NewErr := helper.CreateUser(ID.String(), info.Email, info.FirstName, info.LastName, info.UserID, info.Password, info.MobileNo, role, GetID(claims.UserID))
 	utils.CheckError(NewErr)
 	err = json.NewEncoder(writer).Encode(userID)
-	utils.CheckError(err)
-}
-
-func AdminRestaurant(writer http.ResponseWriter, request *http.Request) {
-	claims := request.Context().Value("user").(model.JWTClaims)
-	adminID := GetID(claims.UserID)
-	data, err := helper.AdminRestaurant(adminID)
-	utils.CheckError(err)
-	err = json.NewEncoder(writer).Encode(data)
 	utils.CheckError(err)
 }
