@@ -3,30 +3,30 @@ package model
 import "github.com/dgrijalva/jwt-go"
 
 type UserInfo struct {
-	FirstName string `db:"FirstName" json:"firstName"`
-	LastName  string `db:"LastName" json:"lastName"`
-	UserID    string `db:"UserID" json:"userID"`
-	MobileNo  string `db:"MobileNo" json:"mobileNo"`
-	Email     string `db:"Email" json:"email"`
-	Password  string `db:"Password" json:"password"`
-	ID        string `db:"ID" json:"ID"`
+	FirstName string `db:"firstname" json:"firstName"`
+	LastName  string `db:"lastname" json:"lastName"`
+	UserID    string `db:"userid" json:"userID"`
+	MobileNo  string `db:"mobileno" json:"mobileNo"`
+	Email     string `db:"email" json:"email"`
+	Password  string `db:"password" json:"password"`
+	ID        string `db:"id" json:"ID"`
 	Role      string `db:"role" json:"role"`
 }
 
 type JWTClaims struct {
-	UserID string `json:"user"`
-	Role   string `json:"role"`
+	UserID string `db:"createdby"json:"user"`
+	Role   string `db:"role" json:"role"`
 	jwt.StandardClaims
 }
 
 type AdminInfo struct {
-	FirstName string `db:"FirstName" json:"firstName"`
-	LastName  string `db:"LastName" json:"lastName"`
-	MobileNo  string `db:"MobileNo" json:"mobileNo"`
-	Email     string `db:"Email" json:"email"`
-	Password  string `db:"Password" json:"password"`
-	ID        string `db:"ID" json:"ID"`
-	AdminID   string `db:"AdminID" json:"adminID"`
+	FirstName string `db:"firstname" json:"firstName"`
+	LastName  string `db:"lastname" json:"lastName"`
+	MobileNo  string `db:"mobileno" json:"mobileNo"`
+	Email     string `db:"email" json:"email"`
+	Password  string `db:"password" json:"password"`
+	ID        string `db:"id" json:"ID"`
+	AdminID   string `db:"adminid" json:"adminID"`
 }
 
 type Restaurant struct {
@@ -47,7 +47,15 @@ type Info struct {
 }
 
 type Dishes struct {
-	ID       int    `db:"id" json:"ID"`
+	ID       int    `db:"restaurantid" json:"restaurantID"`
 	DishName string `db:"dishname" json:"dishName"`
 	Price    int    `db:"price" json:"price"`
+}
+
+type SubAdmin struct {
+	//FirstName string `db:"firstname" json:"firstName"`
+	//LastName  string `db:"lastname" json:"lastName"`
+	UserID   string `db:"userID" json:"userID"`
+	MobileNo string `db:"mobileno" json:"mobileNo"`
+	Email    string `db:"email" json:"email"`
 }

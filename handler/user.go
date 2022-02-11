@@ -12,8 +12,6 @@ import (
 	"time"
 )
 
-var UserKey = []byte("user_key")
-var AdminKey = []byte("admin_key")
 var mySigningKey = []byte("secret_key")
 
 func CreateToken(userid, role string) (string, error) {
@@ -23,23 +21,9 @@ func CreateToken(userid, role string) (string, error) {
 	claims["user"] = userid
 	claims["role"] = role
 	claims["exp"] = time.Now().Add(time.Minute * 20).Unix()
-	//tokenString, err := token.SignedString(mySigningKey)
-	//utils.CheckError(err)
-	//return tokenString, nil
-	if role == "admin" {
-		tokenString, err := token.SignedString(AdminKey)
-		if err != nil {
-			return "", err
-		}
-		return tokenString, nil
-	} else {
-		tokenString, err := token.SignedString(UserKey)
-		if err != nil {
-			return "", err
-		}
-		return tokenString, nil
-	}
-
+	tokenString, err := token.SignedString(mySigningKey)
+	utils.CheckError(err)
+	return tokenString, nil
 }
 
 func Distance(lat1, lng1, lat2, lng2 float64) float64 {
@@ -69,18 +53,6 @@ func Signup(writer http.ResponseWriter, request *http.Request) {
 	utils.Encode(writer, user)
 }
 
-//func AdminSignUp(writer http.ResponseWriter, request *http.Request) {
-//	var info model.UserInfo
-//	role := "admin"
-//	err := json.NewDecoder(request.Body).Decode(&info)
-//	utils.CheckError(err)
-//	ID := uuid.New()
-//	admin, NewErr := helper.CreateUser(ID.String(), info.Email, info.FirstName, info.LastName, info.UserID, info.Password, info.MobileNo, role)
-//	utils.CheckError(NewErr)
-//	utils.Encode(writer, admin)
-//
-//}
-
 func Login(writer http.ResponseWriter, request *http.Request) {
 	var info model.LoginInfo
 	err := json.NewDecoder(request.Body).Decode(&info)
@@ -92,57 +64,5 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 	sessionErr := helper.CreateSession(token, userid.Userid)
 	utils.CheckError(sessionErr)
 	err = json.NewEncoder(writer).Encode(token)
-	utils.CheckError(err)
-}
-
-func AddRestaurant(writer http.ResponseWriter, request *http.Request) {
-	var restaurant model.Restaurant
-	claims := request.Context().Value("user").(model.JWTClaims)
-	err := json.NewDecoder(request.Body).Decode(&restaurant)
-	utils.CheckError(err)
-	NewErr := helper.AddRestaurant(restaurant.Name, claims.UserID, restaurant.Lat, restaurant.Lng, restaurant.RestaurantID)
-	utils.CheckError(NewErr)
-}
-
-func AllRestaurant(writer http.ResponseWriter, request *http.Request) {
-	data, err := helper.Restaurant()
-	//claims := request.Context().Value("user").(model.JWTClaims)
-	//fmt.Println(claims.Role)
-	utils.CheckError(err)
-	err = json.NewEncoder(writer).Encode(data)
-	utils.CheckError(err)
-}
-
-func AddSubAdmin(writer http.ResponseWriter, request *http.Request) {
-	var info model.UserInfo
-	err := json.NewDecoder(request.Body).Decode(&info)
-	utils.CheckError(err)
-	ID := uuid.New()
-	role := "subadmin"
-	claims := request.Context().Value("user").(model.JWTClaims)
-	userID, NewErr := helper.CreateUser(ID.String(), info.Email, info.FirstName, info.LastName, info.UserID, info.Password, info.MobileNo, role, claims.UserID)
-	utils.CheckError(NewErr)
-	err = json.NewEncoder(writer).Encode(userID)
-	utils.CheckError(err)
-}
-
-func AddDish(writer http.ResponseWriter, request *http.Request) {
-	var dish model.Dishes
-	err := json.NewDecoder(request.Body).Decode(&dish)
-	utils.CheckError(err)
-	//claims := request.Context().Value("user").(model.JWTClaims)
-	err = helper.AddDish(dish.DishName, dish.ID, dish.Price)
-	utils.CheckError(err)
-}
-
-func AllDish(writer http.ResponseWriter, request *http.Request) {
-	restaurantID := struct {
-		ID int `db:"id" json:"ID"`
-	}{}
-	err := json.NewDecoder(request.Body).Decode(&restaurantID)
-	utils.CheckError(err)
-	dishes, NewErr := helper.Dishes(restaurantID.ID)
-	utils.CheckError(NewErr)
-	err = json.NewEncoder(writer).Encode(dishes)
 	utils.CheckError(err)
 }

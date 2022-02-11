@@ -75,3 +75,26 @@ func CreateSession(token, userid string) error {
 	}
 	return nil
 }
+
+func Subadmin(admin, role string) ([]model.SubAdmin, error) {
+	// language=SQL
+	SQL := `SELECT email,userid,mobileno FROM users WHERE createdby=$1 AND role=$2 `
+	subadmin := make([]model.SubAdmin, 0)
+	err := database.RMS.Select(&subadmin, SQL, admin, role)
+	if err != nil {
+		return nil, err
+	}
+	return subadmin, nil
+}
+
+func AdminUsers(adminID string) ([]model.UserInfo, error) {
+	// language=SQL
+	SQL := `SELECT id,firstname,lastname,email,mobileno,role,userid FROM users WHERE createdby=$1`
+	users := make([]model.UserInfo, 0)
+	err := database.RMS.Select(&users, SQL, adminID)
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+
+}

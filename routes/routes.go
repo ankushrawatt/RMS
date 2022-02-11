@@ -18,18 +18,31 @@ func Route() *Server {
 			public.Post("/signup", handler.Signup)
 			public.Post("/login", handler.Login)
 		})
-		r.Route("/user", func(user chi.Router) {
-			user.Use(middleware.UserMiddleware)
-			user.Get("/", handler.AllRestaurant)
-			user.Post("/", handler.AllDish)
+		r.Route("/rms", func(rms chi.Router) {
+			rms.Use(middleware.AuthMiddleware)
+			rms.Route("/user", func(user chi.Router) {
+				user.Use(middleware.UserMiddleware)
+				user.Get("/", handler.AllRestaurant)
+				rms.Route("/{id}", func(restaurant chi.Router) {
+					restaurant.Post("/", handler.AllDish)
+				})
 
-		})
-		r.Route("/admin", func(admin chi.Router) {
-			admin.Use(middleware.AdminMiddleware)
-			admin.Post("/addrestaurant", handler.AddRestaurant)
-			admin.Post("/addsubadmin", handler.AddSubAdmin)
-			admin.Post("/adddish", handler.AddDish)
+			})
+			rms.Route("/admin", func(admin chi.Router) {
+				admin.Use(middleware.AdminMiddleware)
+				admin.Get("/subadmin", handler.Subadmin)
+				admin.Get("/users", handler.AdminUsers)
+				admin.Get("/restaurant", handler.AdminRestaurant)
 
+				rms.Route("/add", func(add chi.Router) {
+					add.Post("/dish", handler.AddDish)
+					add.Post("/subadmin", handler.AddSubAdmin)
+					add.Post("/restaurant", handler.AddRestaurant)
+					add.Post("/user", handler.AddUser)
+
+				})
+
+			})
 		})
 	})
 	return &Server{router}
