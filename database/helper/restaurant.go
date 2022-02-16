@@ -64,14 +64,3 @@ func Dishes(ID int) ([]model.Dishes, error) {
 	}
 	return dishes, nil
 }
-func GetAdminID(userid string) (string, error) {
-	//language=sql
-	SQL := `SELECT id FROM users WHERE userid=$1`
-	var id string
-	err := database.RMS.Get(&id, SQL, userid)
-	if err != nil {
-		return "", err
-	}
-	return id, nil
-
-}

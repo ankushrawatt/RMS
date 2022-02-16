@@ -23,7 +23,7 @@ func Route() *Server {
 			rms.Route("/user", func(user chi.Router) {
 				user.Use(middleware.UserMiddleware)
 				user.Get("/", handler.AllRestaurant)
-				user.Post("/newaddress", handler.AddAddress)
+				user.Post("/address", handler.AddAddress)
 				user.Post("/", handler.AllDish)
 
 				//rms.Route("/{id}", func(restaurant chi.Router) {

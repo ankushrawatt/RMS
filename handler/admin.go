@@ -28,27 +28,22 @@ func AddRestaurant(writer http.ResponseWriter, request *http.Request) {
 	utils.CheckError(NewErr)
 }
 
+//DOUBTS NEED TO BE CLEARED
 func AllRestaurant(writer http.ResponseWriter, request *http.Request) {
 	claims := request.Context().Value("user").(model.JWTClaims)
 	if claims.Role == "user" {
 		data, err := helper.Restaurant()
 		utils.CheckError(err)
-		fmt.Println(data[0].Lat)
-
 		id := GetID(claims.UserID)
 		address, newErr := helper.GetUserAddress(id)
 		utils.CheckError(newErr)
 		distance := make([]float64, 2)
 		for i := 0; i < 2; i++ {
 			distance[i] = utils.Distance(data[i].Lat, data[i].Lng, address.Lat, address.Lng)
-
+			writer.Write([]byte(fmt.Sprintf(" name:%v restrauntID:%v distance:%v \n", data[i].Name, data[i].RestaurantID, distance[i])))
 		}
-		for i := 0; i < 2; i++ {
-			writer.Write([]byte(fmt.Sprintf("Distance for %v is %vKM ", data[i].Name, distance[i])))
-		}
-
-		err = json.NewEncoder(writer).Encode(data)
-		utils.CheckError(err)
+		//err = json.NewEncoder(writer).Encode(data)
+		//utils.CheckError(err)
 
 		return
 	} else {

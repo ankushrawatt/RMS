@@ -36,7 +36,7 @@ func migrateStart(db *sqlx.DB) error {
 	}
 	m, NewErr := migrate.NewWithDatabaseInstance("file://database/migration", "postgres", driver)
 	if NewErr != nil {
-		return err
+		return NewErr
 	}
 	if MigrateErr := m.Up(); MigrateErr != nil && MigrateErr != migrate.ErrNoChange { //up(): will migrate all the way up
 		return err
