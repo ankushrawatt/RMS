@@ -17,6 +17,7 @@ func Route() *Server {
 		r.Route("/public", func(public chi.Router) {
 			public.Post("/signup", handler.Signup)
 			public.Post("/login", handler.Login)
+			public.Get("/health", handler.Health)
 		})
 		r.Route("/rms", func(rms chi.Router) {
 			rms.Use(middleware.AuthMiddleware)

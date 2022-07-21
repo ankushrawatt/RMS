@@ -6,6 +6,7 @@ import (
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jmoiron/sqlx"
+	"log"
 	"rmsProject/utils"
 )
 
@@ -20,7 +21,8 @@ const (
 
 func Connection(host, port, dbname, user, password string, sslMode SSLMode) error {
 
-	conn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", host, port, user, password, dbname, SSLModeDisable)
+	conn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s  sslmode=%s", host, user, password, dbname, port, SSLModeDisable)
+	log.Printf(conn)
 	db, err := sqlx.Open("postgres", conn)
 	utils.CheckError(err)
 	err = db.Ping()

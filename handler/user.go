@@ -49,6 +49,12 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 	utils.CheckError(err)
 }
 
+func Health(writer http.ResponseWriter, request *http.Request) {
+
+	err := json.NewEncoder(writer).Encode("Hello")
+	utils.CheckError(err)
+}
+
 func AddAddress(writer http.ResponseWriter, request *http.Request) {
 	claims := request.Context().Value("user").(model.JWTClaims)
 	ID := GetID(claims.UserID)

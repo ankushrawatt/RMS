@@ -9,8 +9,8 @@ import (
 
 const (
 	host     = "localhost"
-	port     = "5432"
-	dbname   = "rmsProject"
+	port     = "5433"
+	dbname   = "postgres"
 	password = "1234"
 	user     = "postgres"
 )
@@ -20,6 +20,6 @@ func main() {
 	utils.CheckError(err)
 	fmt.Println("Connection established successfully.....")
 	srv := routes.Route()
-	connErr := srv.Run(":6666")
+	connErr := srv.Run(":8080")
 	utils.CheckError(connErr)
 }
